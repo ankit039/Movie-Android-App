@@ -4,13 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practo_movie.helpers.MovieListAdapter
-import com.example.practo_movie.services.Api_Solver
-import com.example.practo_movie.services.MovieList_Service
+import com.example.practo_movie.services.ApiSolver
+import com.example.practo_movie.services.MovieListService
 import com.example.practo_movie.services.ServiceBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,14 +26,14 @@ class MovieActivity : AppCompatActivity() {
 
     private fun loadMovies() {
         //initiate the service
-        val destinationService = ServiceBuilder.buildService(MovieList_Service::class.java)
+        val destinationService = ServiceBuilder.buildService(MovieListService::class.java)
         val requestCall = destinationService.getMovieList()
         //make network call
-        requestCall.enqueue(object : Callback<Api_Solver> {
+        requestCall.enqueue(object : Callback<ApiSolver> {
 
             override fun onResponse(
-                call: Call<Api_Solver>,
-                response: Response<Api_Solver>
+                call: Call<ApiSolver>,
+                response: Response<ApiSolver>
             ) {
                 //Log.d("Response","onResponse: ${response.body()?.get_api_solver()}")
                 if (response.isSuccessful) {
@@ -81,7 +80,7 @@ class MovieActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Api_Solver>, t: Throwable) {
+            override fun onFailure(call: Call<ApiSolver>, t: Throwable) {
                 Log.e("Error", "$t")
                 Toast.makeText(this@MovieActivity, "Something went wrong $t", Toast.LENGTH_SHORT)
                     .show()

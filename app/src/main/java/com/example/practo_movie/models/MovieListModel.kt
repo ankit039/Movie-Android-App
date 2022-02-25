@@ -1,6 +1,6 @@
 package com.example.practo_movie.models
 
-data class MovieList_Model(
+data class MovieListModel(
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,

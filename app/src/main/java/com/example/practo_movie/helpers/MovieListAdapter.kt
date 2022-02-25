@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.example.practo_movie.R
-import com.example.practo_movie.models.MovieList_Model
+import com.example.practo_movie.models.MovieListModel
 
-class MovieListAdapter(private val moviesList: List<MovieList_Model> = emptyList()) :
+class MovieListAdapter(private val moviesList: List<MovieListModel> = emptyList()) :
     RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
@@ -33,7 +33,7 @@ class MovieListAdapter(private val moviesList: List<MovieList_Model> = emptyList
         var moviedate = itemView.findViewById<TextView>(R.id.moviedate)
         var moviedesc = itemView.findViewById<TextView>(R.id.moviedesc)
 
-        fun bind(movielistModel: MovieList_Model) {
+        fun bind(movielistModel: MovieListModel) {
             Picasso.get()
                 .load("https://www.themoviedb.org/t/p/w300_and_h450_bestv2" + movielistModel.poster_path)
                 .into(movieimage)

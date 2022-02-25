@@ -54,7 +54,7 @@ class MovieActivity : AppCompatActivity() {
                         //implmented onClick event here
                         myadapter.setOnItemClickListener(object :
                             MovieListAdapter.onItemClickListener {
-                            override fun onItemClick(position: Int) {
+                            override fun onItemClick(`position`: Int) {
 
                                 val list =movieList[position]
 

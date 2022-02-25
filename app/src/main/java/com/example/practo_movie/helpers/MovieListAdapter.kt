@@ -15,6 +15,7 @@ class MovieListAdapter(private val moviesList: List<MovieList_Model> = emptyList
 
     private lateinit var mListener: onItemClickListener
 
+    //todo: use Kotlin HOC also
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }

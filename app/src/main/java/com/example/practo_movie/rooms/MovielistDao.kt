@@ -7,13 +7,18 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 import com.example.practo_movie.models.MovieListModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovielistDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addMovie(movieListModel: MovieListModel)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addMovies(movieListModel: List<MovieListModel>)
 
-    @Query("SELECT * FROM movie_list_table ORDER BY ID ASC")
-    fun readAllData(): LiveData<List<MovieListModel>>
+    @Query("SELECT COUNT(*) FROM movie_list_table")
+    fun getCount(): Int
+
+    @Query("SELECT * FROM movie_list_table")
+    fun getAllMovies(): Flow<List<MovieListModel>>
+
 }

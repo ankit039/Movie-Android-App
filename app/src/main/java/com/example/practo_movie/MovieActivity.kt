@@ -19,9 +19,13 @@ import com.example.practo_movie.models.MovieListModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.practo_movie.rooms.MovieDatabase.Companion.getDatabase
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.runBlocking
 
 
 class MovieActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
@@ -29,14 +33,28 @@ class MovieActivity : AppCompatActivity() {
         loadMovies()
     }
 
-    // TODO: cant access getDatabase function here!
-    /*
-    fun insertData(model: MovieListModel){
+    // To insert Data into Room
+    fun insertData(model: List<MovieListModel>) {
         GlobalScope.launch {
-            getDatabase().movielistDao().addMovie(MovieListModel)
+            getDatabase(applicationContext).movielistDao().addMovies(model)
         }
     }
-    */
+
+    // To Fetch Data from Room
+    fun getData() {
+        GlobalScope.launch {
+            getDatabase(applicationContext).movielistDao().getAllMovies().collect {
+                Log.e("Movie List- ", it.toString())
+            }
+        }
+    }
+
+    // To Get Count of all data Present
+    suspend fun getCount(): Int = runBlocking {
+        var result = async { getDatabase(applicationContext).movielistDao().getCount() }
+        return@runBlocking result.await()
+    }
+
 
     private fun loadMovies() {
         //initiate the service
@@ -54,6 +72,14 @@ class MovieActivity : AppCompatActivity() {
                     val movieList = response.body()?.get_api_solver()!!
                     //Log.d("MovieList", "${ response.body()?.get_api_solver() }")
                     //Log.d("Response", "Movie List size: ${movieList.size}")
+
+                    insertData(movieList)
+                    getData()
+
+                    GlobalScope.launch {
+                        Log.e("Total Count- ", getCount().toString())
+                    }
+
                     findViewById<RecyclerView>(R.id.movie_recycler).apply {
                         setHasFixedSize(true)
 
@@ -62,6 +88,7 @@ class MovieActivity : AppCompatActivity() {
 
                         //attaching adapter
                         layoutManager = GridLayoutManager(this@MovieActivity, 1)
+
                         adapter = myadapter
 
                         //implmented onClick event here

@@ -15,6 +15,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+import com.example.practo_movie.models.MovieListModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.example.practo_movie.rooms.MovieDatabase.Companion.getDatabase
+
 
 class MovieActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +28,15 @@ class MovieActivity : AppCompatActivity() {
 
         loadMovies()
     }
+
+    // TODO: cant access getDatabase function here!
+    /*
+    fun insertData(model: MovieListModel){
+        GlobalScope.launch {
+            getDatabase().movielistDao().addMovie(MovieListModel)
+        }
+    }
+    */
 
     private fun loadMovies() {
         //initiate the service
@@ -55,17 +69,18 @@ class MovieActivity : AppCompatActivity() {
                             MovieListAdapter.onItemClickListener {
                             override fun onItemClick(`position`: Int) {
 
-                                val list =movieList[position]
+                                val list = movieList[position]
 
                                 Log.d("Clicked Position- ", "$position")
 
                                 //passing data to next MovieDetail screen to show more details
-                                val intent=Intent(this@MovieActivity, MovieDetailActivity::class.java)
-                                intent.putExtra("title",list.title)
-                                intent.putExtra("desc",list.overview)
-                                intent.putExtra("poster_path",list.poster_path)
-                                intent.putExtra("backdrop_path",list.backdrop_path)
-                                intent.putExtra("vote_avg",list.vote_average.toString())
+                                val intent =
+                                    Intent(this@MovieActivity, MovieDetailActivity::class.java)
+                                intent.putExtra("title", list.title)
+                                intent.putExtra("desc", list.overview)
+                                intent.putExtra("poster_path", list.poster_path)
+                                intent.putExtra("backdrop_path", list.backdrop_path)
+                                intent.putExtra("vote_avg", list.vote_average.toString())
                                 startActivity(intent)
                             }
                         })

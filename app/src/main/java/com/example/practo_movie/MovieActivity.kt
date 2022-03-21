@@ -4,7 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practo_movie.helpers.MovieListAdapter
@@ -16,21 +19,36 @@ import retrofit2.Callback
 import retrofit2.Response
 
 import com.example.practo_movie.models.MovieListModel
+import com.example.practo_movie.repository.MovieActivityRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.practo_movie.rooms.MovieDatabase.Companion.getDatabase
+import com.example.practo_movie.viewModel.MovieActivityViewModel
+import com.example.practo_movie.viewModel.MovieActivityViewModelFactory
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
+import retrofit2.Retrofit
 
 
 class MovieActivity : AppCompatActivity() {
+
+    lateinit var movieActivityViewModel: MovieActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
 
-        loadMovies()
+        val movieListService = ServiceBuilder.getInstance().create(MovieListService::class.java)
+        val repository = MovieActivityRepository(movieListService)
+
+        movieActivityViewModel = ViewModelProvider(this,MovieActivityViewModelFactory(repository)).get(MovieActivityViewModel::class.java)
+        movieActivityViewModel.movies.observe(this, Observer {
+            Log.e("%%%%",it.results.toString())
+        })
+//        myData()
+//        setData()
+//        loadMovies()
     }
 
     // To insert Data into Room
@@ -55,7 +73,16 @@ class MovieActivity : AppCompatActivity() {
         return@runBlocking result.await()
     }
 
+//    fun myData(){
+//        Log.e("%%%%%%%%%",movieActivityViewModel.movieList.toString())
+//    }
+//
+//    fun setData( ){
+//        movieActivityViewModel.loadMovies()
+//        myData()
+//    }
 
+    /*
     private fun loadMovies() {
         //initiate the service
         val destinationService = ServiceBuilder.buildService(MovieListService::class.java)
@@ -130,5 +157,6 @@ class MovieActivity : AppCompatActivity() {
 
         })
     }
+    */
 
 }

@@ -1,5 +1,6 @@
 package com.example.practo_movie.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.practo_movie.models.MovieList
@@ -17,10 +18,13 @@ class MovieActivityRepository(private val movieListService: MovieListService) {
         val result = movieListService.getMovies(
             api_key = "2e365ca052181a25b546c4372acfa99b",
             language = "en-US",
-            page
+            page=page
         )
-        if (result?.body() != null) {
-            movieLiveData.postValue(result.body())
+        val response = result?.execute()
+        if (response != null) {
+            movieLiveData.postValue(response.body())
+        }else{
+            Log.e("Error- ","got error in MovieActivityRepository")
         }
     }
 }

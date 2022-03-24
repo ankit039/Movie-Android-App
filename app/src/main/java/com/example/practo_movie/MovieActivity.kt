@@ -4,19 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.practo_movie.helpers.MovieListAdapter
-import com.example.practo_movie.services.ApiSolver
 import com.example.practo_movie.services.MovieListService
 import com.example.practo_movie.services.ServiceBuilder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 import com.example.practo_movie.models.MovieListModel
 import com.example.practo_movie.repository.MovieActivityRepository
@@ -28,7 +21,6 @@ import com.example.practo_movie.viewModel.MovieActivityViewModelFactory
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
-import retrofit2.Retrofit
 
 
 class MovieActivity : AppCompatActivity() {
@@ -39,12 +31,40 @@ class MovieActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
 
+        //MMVM Retrofit Usage
         val movieListService = ServiceBuilder.getInstance().create(MovieListService::class.java)
         val repository = MovieActivityRepository(movieListService)
 
-        movieActivityViewModel = ViewModelProvider(this,MovieActivityViewModelFactory(repository)).get(MovieActivityViewModel::class.java)
+        movieActivityViewModel = ViewModelProvider(this, MovieActivityViewModelFactory(repository)).get(MovieActivityViewModel::class.java)
         movieActivityViewModel.movies.observe(this, Observer {
-            Log.e("%%%%",it.results.toString())
+            //Log.e("%%%%",it.results.toString())
+
+            findViewById<RecyclerView>(R.id.movie_recycler).apply {
+                setHasFixedSize(true)
+
+                //adding adapter here
+                var myadapter = MovieListAdapter(it.results)
+                layoutManager = GridLayoutManager(this@MovieActivity, 1)
+                adapter = myadapter
+
+                //implmented onClick event here
+                myadapter.setOnItemClickListener(object :
+                    MovieListAdapter.onItemClickListener {
+                    override fun onItemClick(`position`: Int) {
+                        val list = it.results[position]
+                        Log.d("Clicked Position- ", "$position")
+                        //passing data to next MovieDetail screen to show more details
+                        val intent = Intent(this@MovieActivity, MovieDetailActivity::class.java)
+                        intent.putExtra("title", list.title)
+                        intent.putExtra("desc", list.overview)
+                        intent.putExtra("poster_path", list.poster_path)
+                        intent.putExtra("backdrop_path", list.backdrop_path)
+                        intent.putExtra("vote_avg", list.vote_average.toString())
+                        startActivity(intent)
+                    }
+                })
+
+            }
         })
 //        myData()
 //        setData()

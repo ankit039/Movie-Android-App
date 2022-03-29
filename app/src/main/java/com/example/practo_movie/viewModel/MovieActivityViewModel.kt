@@ -1,24 +1,12 @@
 package com.example.practo_movie.viewModel
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.practo_movie.models.MovieList
-import com.example.practo_movie.models.MovieListModel
 import com.example.practo_movie.repository.MovieActivityRepository
-import com.example.practo_movie.services.ApiSolver
-import com.example.practo_movie.services.MovieListService
-import com.example.practo_movie.services.ServiceBuilder
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.handleCoroutineException
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MovieActivityViewModel(private val repository: MovieActivityRepository) : ViewModel() {
 

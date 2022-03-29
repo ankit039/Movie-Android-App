@@ -6,9 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.practo_movie.models.Converters
-import com.example.practo_movie.models.MovieListModel
+import com.example.practo_movie.models.MovieList
 
-@Database(entities = [MovieListModel::class], version = 1, exportSchema = false)
+@Database(entities = [MovieList.Result::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MovieDatabase: RoomDatabase() {
     abstract fun movielistDao(): MovielistDao
